@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
+import { Schema, model } from 'mongoose';
 
-const productSchema = mongoose.Schema(
+const productSchema = Schema(
   {
     name: {
       type: String,
@@ -17,9 +17,10 @@ const productSchema = mongoose.Schema(
   },
   {
     timestamps: true, // option for let mongodb handle createdAt, updatedAt.
+    versionKey: false,
   }
 );
 
-const Product = mongoose.model('Product', productSchema);
+const Product = model('Product', productSchema);
 
 export default Product;
