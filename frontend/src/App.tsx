@@ -7,7 +7,7 @@ import { useColorModeValue } from './components/ui/color-mode';
 
 function App() {
   return (
-    <Box minH={'100vh'} bg={useColorModeValue('gray.50', 'gray.900')}>
+    <Box minH={'100vh'} bg={useColorModeValue('gray.50', 'gray.950')}>
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
