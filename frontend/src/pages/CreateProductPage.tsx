@@ -1,10 +1,31 @@
 import { ProductForm } from '@/components/ProductForm';
+import { toaster } from '@/components/ui/toaster';
+import { useProductStore } from '@/stores';
 import type { Product } from '@/types';
 import { Container, Heading, VStack } from '@chakra-ui/react';
 
 function CreateProductPage() {
-  const handleProductSubmit = (product: Product) => {
-    console.log(product);
+  const { addProduct, isLoading } = useProductStore();
+
+  const handleProductSubmit = async (product: Omit<Product, 'id'>) => {
+    const { success, message } = await addProduct(product);
+
+    if (!success) {
+      toaster.create({
+        description: message,
+        type: 'error',
+        duration: 4000,
+      });
+    } else {
+      toaster.create({
+        description: message,
+        type: 'success',
+        closable: true,
+        duration: 3000,
+      });
+    }
+
+    return { success, message };
   };
 
   return (
@@ -14,7 +35,7 @@ function CreateProductPage() {
           Create New Product
         </Heading>
 
-        <ProductForm onSubmit={handleProductSubmit} />
+        <ProductForm submitting={isLoading} onSubmit={handleProductSubmit} />
       </VStack>
     </Container>
   );

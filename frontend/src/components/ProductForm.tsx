@@ -13,17 +13,21 @@ import {
 import { useState } from 'react';
 
 interface ProductFormProps {
-  onSubmit: (product: Product) => void;
+  submitting: boolean;
+  onSubmit: (
+    product: Omit<Product, 'id'>
+  ) => Promise<{ success: boolean; message: string }>;
 }
 
-const initialProduct: Product = {
+const initialProductForm: Omit<Product, 'id'> = {
   name: '',
   price: 0,
   image: '',
 };
 
-function ProductForm({ onSubmit }: ProductFormProps) {
-  const [newProduct, setNewProduct] = useState<Product>(initialProduct);
+function ProductForm({ submitting, onSubmit }: ProductFormProps) {
+  const [newProduct, setNewProduct] =
+    useState<Omit<Product, 'id'>>(initialProductForm);
   const { errors, validateInputs, clearErrors } = useProductFormValidator();
 
   const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,15 +48,19 @@ function ProductForm({ onSubmit }: ProductFormProps) {
     });
   };
 
-  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const { name, price } = newProduct;
     const isValid = validateInputs(name, price);
 
     if (isValid) {
-      onSubmit(newProduct);
-      clearErrors();
+      const { success } = await onSubmit(newProduct);
+
+      if (success) {
+        setNewProduct(initialProductForm);
+        clearErrors();
+      }
     }
   };
 
@@ -106,8 +114,14 @@ function ProductForm({ onSubmit }: ProductFormProps) {
             />
           </Field.Root>
 
-          <Button type="submit" w={'full'} bg={'blue.focusRing'}>
-            Add Product
+          <Button
+            type="submit"
+            w={'full'}
+            bg={'blue.focusRing'}
+            loading={submitting}
+            loadingText={'Adding..'}
+            disabled={submitting}>
+            {'Add Product'}
           </Button>
         </VStack>
       </form>
