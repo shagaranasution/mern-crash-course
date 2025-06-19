@@ -29,7 +29,7 @@ export const useProductStore = create<ProductStore>((set) => {
 
       try {
         const addedProduct = await createProduct(product);
-        set((state) => ({ products: { ...state.products, addedProduct } }));
+        set((state) => ({ products: [...state.products, addedProduct] }));
         return { success: true, message: 'Product added successfully' };
       } catch {
         const message = 'Fail to add product';

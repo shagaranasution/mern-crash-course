@@ -1,6 +1,6 @@
 import Product from '../models/product.model.js';
 
-const getProducts = async (req, res) => {
+const getProducts = async (_req, res) => {
   try {
     const products = await Product.find({});
     res.status(200).json({ success: true, data: products });
@@ -31,11 +31,11 @@ const getProductById = async (req, res) => {
 
 const addNewProduct = async (req, res) => {
   const product = req.body;
-  console.log(product.image);
+
   if (!product.name || !product.price) {
     return res
       .status(400)
-      .json({ success: false, message: 'Please provide all fields.' });
+      .json({ success: false, message: 'Please provide all required fields.' });
   }
 
   const newProduct = new Product(product);
