@@ -7,7 +7,7 @@ import { Container, Heading, VStack } from '@chakra-ui/react';
 function CreateProductPage() {
   const { addProduct, isLoading } = useProductStore();
 
-  const handleProductSubmit = async (product: Omit<Product, 'id'>) => {
+  const handleProductSubmit = async (product: Omit<Product, '_id'>) => {
     const { success, message } = await addProduct(product);
 
     if (!success) {

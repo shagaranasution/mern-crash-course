@@ -1,7 +1,24 @@
 import type { Product } from '@/types';
 
+export async function fetchProducts(): Promise<Product[]> {
+  try {
+    const res = await fetch('/api/products');
+
+    if (!res.ok) {
+      throw new Error(res.statusText);
+    }
+
+    const decoded = await res.json();
+
+    return decoded.data;
+  } catch (err) {
+    console.error('Error calling get products api:', (err as Error).message);
+    throw err;
+  }
+}
+
 export async function createProduct(
-  product: Omit<Product, 'id'>
+  product: Omit<Product, '_id'>
 ): Promise<Product> {
   try {
     const res = await fetch('/api/products', {
@@ -11,15 +28,20 @@ export async function createProduct(
       },
       body: JSON.stringify(product),
     });
-    const data = await res.json();
 
-    if (!data.success) {
-      throw new Error(data.message);
+    if (!res.ok) {
+      throw new Error(res.statusText);
     }
 
-    return data.data;
+    const decoded = await res.json();
+
+    if (!decoded.success) {
+      throw new Error(decoded.message);
+    }
+
+    return decoded.data;
   } catch (err) {
-    console.error('Error calling post product api: ', (err as Error).message);
+    console.error('Error calling post product api:', (err as Error).message);
     throw err;
   }
 }

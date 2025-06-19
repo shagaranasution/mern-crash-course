@@ -15,11 +15,11 @@ import { useState } from 'react';
 interface ProductFormProps {
   submitting: boolean;
   onSubmit: (
-    product: Omit<Product, 'id'>
+    product: Omit<Product, '_id'>
   ) => Promise<{ success: boolean; message: string }>;
 }
 
-const initialProductForm: Omit<Product, 'id'> = {
+const initialProductForm: Omit<Product, '_id'> = {
   name: '',
   price: 0,
   image: '',
@@ -27,7 +27,7 @@ const initialProductForm: Omit<Product, 'id'> = {
 
 function ProductForm({ submitting, onSubmit }: ProductFormProps) {
   const [newProduct, setNewProduct] =
-    useState<Omit<Product, 'id'>>(initialProductForm);
+    useState<Omit<Product, '_id'>>(initialProductForm);
   const { errors, validateInputs, clearErrors } = useProductFormValidator();
 
   const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {

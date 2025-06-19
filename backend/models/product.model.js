@@ -12,11 +12,11 @@ const productSchema = Schema(
     },
     image: {
       type: String,
-      required: true,
+      required: false,
     },
   },
   {
-    timestamps: true, // option for let mongodb handle createdAt, updatedAt.
+    timestamps: true, // option for let mongodb handle
     versionKey: false,
   }
 );

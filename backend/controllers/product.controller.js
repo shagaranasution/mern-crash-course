@@ -31,7 +31,7 @@ const getProductById = async (req, res) => {
 
 const addNewProduct = async (req, res) => {
   const product = req.body;
-
+  console.log(product.image);
   if (!product.name || !product.price) {
     return res
       .status(400)
