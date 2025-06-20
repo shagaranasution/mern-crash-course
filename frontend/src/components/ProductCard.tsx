@@ -12,11 +12,13 @@ import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 
 interface ProductCardProps {
   product: Product;
+  removing: boolean;
+  onRemove: () => void;
 }
 
 const defaultImageURL = 'https://placehold.co/400x400?text=No+Product+Image';
 
-function ProductCard({ product }: ProductCardProps) {
+function ProductCard({ product, removing, onRemove }: ProductCardProps) {
   let imageSource = product.image;
   if (!imageSource) {
     imageSource = defaultImageURL;
@@ -56,10 +58,12 @@ function ProductCard({ product }: ProductCardProps) {
           </IconButton>
 
           <IconButton
+            onClick={onRemove}
             aria-label="Remove product"
             size={'sm'}
             variant={'subtle'}
-            colorPalette={'red'}>
+            colorPalette={'red'}
+            disabled={removing}>
             <FaTrashAlt />
           </IconButton>
         </HStack>

@@ -18,7 +18,7 @@ const getProductById = async (req, res) => {
 
     if (!product) {
       return res
-        .status(401)
+        .status(404)
         .json({ success: false, message: 'Product Not Found' });
     }
 
@@ -78,11 +78,15 @@ const deleteProductById = async (req, res) => {
 
     if (!product) {
       return res
-        .status(401)
+        .status(404)
         .json({ success: false, message: 'Product Not Found' });
     }
 
-    res.status(200).json({ success: true, message: 'Product Deleted' });
+    res.status(200).json({
+      success: true,
+      message: 'Product Deleted',
+      data: { _id: product._id, name: product.name },
+    });
   } catch (err) {
     console.error('Error in delete product: ', err.message);
     res.status(500).json({ success: false, message: 'Server Error' });

@@ -1,16 +1,27 @@
 import ProductCard from '@/components/ProductCard';
 import ProductCardSkeleton from '@/components/ProductCardSkeleton';
 import ProductEmpty from '@/components/ProductEmpty';
+import { toaster } from '@/components/ui/toaster';
 import { useProductStore } from '@/stores';
 import { Container, VStack, Text, SimpleGrid } from '@chakra-ui/react';
 import { useEffect } from 'react';
 
 function HomePage() {
-  const { products, getProducts, isLoading } = useProductStore();
+  const { products, getProducts, removeProduct, isLoading } = useProductStore();
 
   useEffect(() => {
     getProducts();
   }, [getProducts]);
+
+  const handleProductRemoval = async (id: string) => {
+    const { success, message } = await removeProduct(id);
+    toaster.create({
+      description: message,
+      type: success ? 'success' : 'error',
+      closable: true,
+      duration: 3000,
+    });
+  };
 
   return (
     <Container maxW={'breakpoint-xl'} py={12}>
@@ -51,7 +62,12 @@ function HomePage() {
             gap={5}
             w={'full'}>
             {products.map((product) => (
-              <ProductCard product={product} key={product._id} />
+              <ProductCard
+                product={product}
+                removing={isLoading}
+                onRemove={() => handleProductRemoval(product._id)}
+                key={product._id}
+              />
             ))}
           </SimpleGrid>
         )}
