@@ -1,4 +1,4 @@
-import { ProductForm } from '@/components/ProductForm';
+import ProductForm from '@/components/ProductForm';
 import { toaster } from '@/components/ui/toaster';
 import { useProductStore } from '@/stores';
 import type { Product } from '@/types';

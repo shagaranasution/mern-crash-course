@@ -129,4 +129,4 @@ function ProductForm({ submitting, onSubmit }: ProductFormProps) {
   );
 }
 
-export { ProductForm };
+export default ProductForm;

@@ -1,7 +1,8 @@
 import ProductCard from '@/components/ProductCard';
+import ProductCardSkeleton from '@/components/ProductCardSkeleton';
 import ProductEmpty from '@/components/ProductEmpty';
 import { useProductStore } from '@/stores';
-import { Container, VStack, Text, SimpleGrid, Spinner } from '@chakra-ui/react';
+import { Container, VStack, Text, SimpleGrid } from '@chakra-ui/react';
 import { useEffect } from 'react';
 
 function HomePage() {
@@ -25,7 +26,20 @@ function HomePage() {
           Current Products 🚀
         </Text>
 
-        {isLoading && <Spinner color="cyan.400" size="lg" />}
+        {isLoading && (
+          <SimpleGrid
+            columns={{
+              base: 1,
+              sm: 2,
+              md: 3,
+            }}
+            gap={5}
+            w={'full'}>
+            {Array.from({ length: 6 }).map((_, index) => (
+              <ProductCardSkeleton key={index} />
+            ))}
+          </SimpleGrid>
+        )}
 
         {!isLoading && products.length > 0 && (
           <SimpleGrid
