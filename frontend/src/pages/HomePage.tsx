@@ -60,9 +60,9 @@ function HomePage() {
         {!isLoading && products.length > 0 && (
           <SimpleGrid
             columns={{
-              base: 1,
-              sm: 2,
-              md: 3,
+              base: 2,
+              sm: 3,
+              md: 4,
             }}
             gap={5}
             w={'full'}>
