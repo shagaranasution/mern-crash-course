@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { ProductStore } from './product.type';
+import type { ProductStore } from './product.types';
 import { createProduct, deleteProduct, fetchProducts } from './product.api';
 
 export const useProductStore = create<ProductStore>((set, get) => {

@@ -7,10 +7,10 @@ function ProductCardSkeleton() {
       <Skeleton height={'192px'} width={'full'} /> {/* Image placeholder */}
       <Box p={4}>
         {/* Product Name placeholder */}
-        <Skeleton height={'20px'} mb={2} width={'70%'} />
+        <Skeleton height={'20px'} width={'70%'} mb={2} />
 
         {/* Product Price placeholder */}
-        <Skeleton height={'16px'} mb={4} width={'50%'} />
+        <Skeleton height={'16px'} width={'50%'} mb={4} />
 
         <HStack gap={2}>
           <IconButton

@@ -6,11 +6,13 @@ import {
   Box,
   Button,
   Field,
+  HStack,
   Input,
   InputGroup,
   VStack,
 } from '@chakra-ui/react';
 import { useState } from 'react';
+import { ImageDiscoveryDialog } from './ImageDiscoveryDialog';
 
 interface ProductFormProps {
   submitting: boolean;
@@ -46,6 +48,10 @@ function ProductForm({ submitting, onSubmit }: ProductFormProps) {
       ...newProduct,
       [name]: parseInt(unformatPrice(value)) || 0,
     });
+  };
+
+  const handleSelect = (url: string) => {
+    setNewProduct((prev) => ({ ...prev, image: url }));
   };
 
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -104,15 +110,21 @@ function ProductForm({ submitting, onSubmit }: ProductFormProps) {
             <Field.ErrorText>{errors?.price}</Field.ErrorText>
           </Field.Root>
 
-          <Field.Root>
-            <Field.Label>Image</Field.Label>
-            <Input
-              placeholder="Enter Image URL"
-              name="image"
-              value={newProduct.image}
-              onChange={handleFieldChange}
-            />
-          </Field.Root>
+          <HStack w={'full'} gap={4} alignContent={'space-between'}>
+            <Field.Root>
+              <Field.Label>Image</Field.Label>
+              <Input
+                placeholder="Enter Image URL"
+                name="image"
+                value={newProduct.image}
+                onChange={handleFieldChange}
+              />
+            </Field.Root>
+
+            <Box alignSelf={'end'}>
+              <ImageDiscoveryDialog onSelect={handleSelect} />
+            </Box>
+          </HStack>
 
           <Button
             type="submit"
