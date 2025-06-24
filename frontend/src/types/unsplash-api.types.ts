@@ -1,4 +1,4 @@
-export interface SearchApiResponse {
+export interface SearchImageUnsplashApiResponse {
   total: number;
   total_pages: number;
   results: UnsplashImage[];

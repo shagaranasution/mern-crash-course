@@ -11,64 +11,90 @@ import {
   InputGroup,
   VStack,
 } from '@chakra-ui/react';
-import { useState } from 'react';
-import { ImageDiscoveryDialog } from './ImageDiscoveryDialog';
+import { useEffect, useRef, useState } from 'react';
+import ImageDiscoveryDialog from './ImageDiscoveryDialog';
 
 interface ProductFormProps {
+  product?: Product | null;
   submitting: boolean;
   onSubmit: (
-    product: Omit<Product, '_id'>
+    product: Omit<Product, '_id'>,
+    id?: string | null
   ) => Promise<{ success: boolean; message: string }>;
+  onSuccess?: () => void;
 }
 
-const initialProductForm: Omit<Product, '_id'> = {
+interface ProductInputForm {
+  name: string;
+  price: string;
+  image?: string;
+}
+
+const initialProductForm: ProductInputForm = {
   name: '',
-  price: 0,
+  price: '',
   image: '',
 };
 
-function ProductForm({ submitting, onSubmit }: ProductFormProps) {
-  const [newProduct, setNewProduct] =
-    useState<Omit<Product, '_id'>>(initialProductForm);
+function ProductForm({
+  product,
+  submitting,
+  onSubmit,
+  onSuccess,
+}: ProductFormProps) {
+  const [inputs, setInputs] = useState<ProductInputForm>(initialProductForm);
   const { errors, validateInputs, clearErrors } = useProductFormValidator();
+  const priceInputRef = useRef(null);
 
   const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
 
     if (name !== 'price') {
-      setNewProduct({
-        ...newProduct,
+      setInputs({
+        ...inputs,
         [name]: value,
       });
 
       return;
     }
 
-    setNewProduct({
-      ...newProduct,
-      [name]: parseInt(unformatPrice(value)) || 0,
+    setInputs({
+      ...inputs,
+      [name]: value,
     });
   };
 
-  const handleSelect = (url: string) => {
-    setNewProduct((prev) => ({ ...prev, image: url }));
+  const handleImageSelect = (url: string) => {
+    setInputs((prev) => ({ ...prev, image: url }));
   };
 
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const { name, price } = newProduct;
+    const { name, price: priceString } = inputs;
+    const price = unformatPrice(priceString);
     const isValid = validateInputs(name, price);
 
     if (isValid) {
-      const { success } = await onSubmit(newProduct);
+      const { success } = await onSubmit(
+        { ...inputs, price: price },
+        product?._id
+      );
 
-      if (success) {
-        setNewProduct(initialProductForm);
+      if (success && !product?._id) {
+        setInputs(initialProductForm);
         clearErrors();
+      } else if (success) {
+        onSuccess?.();
       }
     }
   };
+
+  useEffect(() => {
+    if (!product) return;
+    const { name, price, image } = product;
+    setInputs({ name, price: formatPrice(price), image });
+  }, [product]);
 
   return (
     <Box
@@ -86,7 +112,7 @@ function ProductForm({ submitting, onSubmit }: ProductFormProps) {
             <Input
               placeholder="Enter Product Name"
               name="name"
-              value={newProduct.name}
+              value={inputs.name}
               onChange={handleFieldChange}
             />
             <Field.ErrorText>{errors?.name}</Field.ErrorText>
@@ -101,10 +127,21 @@ function ProductForm({ submitting, onSubmit }: ProductFormProps) {
                 placeholder="0"
                 name="price"
                 inputMode="numeric"
-                value={
-                  newProduct.price === 0 ? '' : formatPrice(newProduct.price)
-                }
+                value={inputs.price}
                 onChange={handleFieldChange}
+                onFocus={() => {
+                  setInputs((prev) => ({
+                    ...prev,
+                    price: `${unformatPrice(prev.price)}`,
+                  }));
+                }}
+                onBlur={() => {
+                  setInputs((prev) => ({
+                    ...prev,
+                    price: formatPrice(parseInt(prev.price)),
+                  }));
+                }}
+                ref={priceInputRef}
               />
             </InputGroup>
             <Field.ErrorText>{errors?.price}</Field.ErrorText>
@@ -116,13 +153,13 @@ function ProductForm({ submitting, onSubmit }: ProductFormProps) {
               <Input
                 placeholder="Enter Image URL"
                 name="image"
-                value={newProduct.image}
+                value={inputs.image}
                 onChange={handleFieldChange}
               />
             </Field.Root>
 
             <Box alignSelf={'end'}>
-              <ImageDiscoveryDialog onSelect={handleSelect} />
+              <ImageDiscoveryDialog onSelect={handleImageSelect} />
             </Box>
           </HStack>
 
@@ -131,9 +168,9 @@ function ProductForm({ submitting, onSubmit }: ProductFormProps) {
             w={'full'}
             bg={'blue.focusRing'}
             loading={submitting}
-            loadingText={'Adding..'}
+            loadingText={product && 'Adding..'}
             disabled={submitting}>
-            {'Add Product'}
+            {product ? `Edit Product` : `Add Product`}
           </Button>
         </VStack>
       </form>

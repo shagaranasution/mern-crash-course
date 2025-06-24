@@ -1,10 +1,17 @@
 import { create } from 'zustand';
 import type { ProductStore } from './product.types';
-import { createProduct, deleteProduct, fetchProducts } from './product.api';
+import {
+  createProduct,
+  deleteProduct,
+  fetchProduct,
+  fetchProducts,
+  updateProduct,
+} from './product.api';
 
 export const useProductStore = create<ProductStore>((set, get) => {
   return {
     products: [],
+    product: null,
     isLoading: false,
     error: null,
 
@@ -17,6 +24,22 @@ export const useProductStore = create<ProductStore>((set, get) => {
         return { success: true, message: 'Get products successfully' };
       } catch {
         const message = 'Fail to get products data';
+        set({ error: message });
+        return { success: false, message };
+      } finally {
+        set({ isLoading: false });
+      }
+    },
+
+    async getProduct(id) {
+      set({ isLoading: true, error: null });
+
+      try {
+        const product = await fetchProduct(id);
+        set({ product });
+        return { success: true, message: 'Get product successfully' };
+      } catch {
+        const message = 'Fail to get product data';
         set({ error: message });
         return { success: false, message };
       } finally {
@@ -37,6 +60,23 @@ export const useProductStore = create<ProductStore>((set, get) => {
         return { success: false, message };
       } finally {
         set({ isLoading: false });
+      }
+    },
+
+    async editProduct(id, product) {
+      set({ isLoading: true, error: null });
+
+      try {
+        const updated = await updateProduct(id, product);
+        set({
+          products: get().products.map((p) => (p._id === id ? updated : p)),
+        });
+        return { success: true, message: 'Product edit successfully' };
+      } catch {
+        const message = 'Fail to edit product';
+        return { success: false, message };
+      } finally {
+        get().setLoading(false);
       }
     },
 

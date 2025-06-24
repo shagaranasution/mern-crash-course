@@ -13,7 +13,6 @@ export async function api<T>(
     }
 
     const parsed = await res.json();
-
     if (opts?.skipAppResponseShape || parsed?.success === undefined) {
       return parsed as T;
     }

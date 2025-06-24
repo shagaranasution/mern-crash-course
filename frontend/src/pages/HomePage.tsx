@@ -2,7 +2,6 @@ import ProductCard from '@/components/ProductCard';
 import ProductCardSkeleton from '@/components/ProductCardSkeleton';
 import ProductEmpty from '@/components/ProductEmpty';
 import { toaster } from '@/components/ui/toaster';
-import { discoverUnsplashImages } from '@/services/discoverUnsplashImages';
 import { useProductStore } from '@/stores';
 import { Container, VStack, Text, SimpleGrid } from '@chakra-ui/react';
 import { useEffect } from 'react';
@@ -13,10 +12,6 @@ function HomePage() {
   useEffect(() => {
     getProducts();
   }, [getProducts]);
-
-  useEffect(() => {
-    discoverUnsplashImages('iPhone');
-  }, []);
 
   const handleProductRemoval = async (id: string) => {
     const { success, message } = await removeProduct(id);

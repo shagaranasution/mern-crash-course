@@ -1,4 +1,4 @@
-import { Container, Flex, HStack, Text, Button } from '@chakra-ui/react';
+import { Container, Flex, HStack, Text, IconButton } from '@chakra-ui/react';
 import { CiSquarePlus } from 'react-icons/ci';
 import { Link } from 'react-router-dom';
 import { useColorMode } from './ui/color-mode';
@@ -28,15 +28,15 @@ function Navbar() {
         </Text>
 
         <HStack gap={2} alignItems={'center'}>
-          <Button variant={'subtle'} asChild>
-            <Link to={'/create'}>
+          <IconButton variant={'subtle'} asChild>
+            <Link to={'/product/add'}>
               <CiSquarePlus />
             </Link>
-          </Button>
+          </IconButton>
 
-          <Button variant={'subtle'} onClick={toggleColorMode}>
+          <IconButton variant={'subtle'} onClick={toggleColorMode}>
             {colorMode === 'light' ? <IoMoon /> : <LuSun />}
-          </Button>
+          </IconButton>
         </HStack>
       </Flex>
     </Container>

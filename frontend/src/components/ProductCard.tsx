@@ -9,6 +9,8 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import { Tooltip } from '@/components/ui/tooltip';
 
 interface ProductCardProps {
   product: Product;
@@ -40,9 +42,11 @@ function ProductCard({ product, removing, onRemove }: ProductCardProps) {
       />
 
       <Box p={4}>
-        <Heading as={'h3'} size={'md'} mb={2}>
-          {product.name}
-        </Heading>
+        <Tooltip content={product.name}>
+          <Heading as={'h3'} size={'md'} mb={2} lineClamp={1}>
+            {product.name}
+          </Heading>
+        </Tooltip>
 
         <Text fontWeight={'light'} fontSize={'large'} mb={4}>
           {`Rp. ${formatPrice(product.price)}`}
@@ -54,7 +58,9 @@ function ProductCard({ product, removing, onRemove }: ProductCardProps) {
             size={'sm'}
             variant={'subtle'}
             colorPalette={'blue'}>
-            <FaEdit />
+            <Link to={`product/${product._id}/edit`}>
+              <FaEdit />
+            </Link>
           </IconButton>
 
           <IconButton

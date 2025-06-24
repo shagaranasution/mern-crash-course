@@ -10,14 +10,12 @@ function CreateProductPage() {
   const handleProductSubmit = async (product: Omit<Product, '_id'>) => {
     const { success, message } = await addProduct(product);
 
-    if (success) {
-      toaster.create({
-        description: message,
-        type: success ? 'success' : 'error',
-        closable: true,
-        duration: 3000,
-      });
-    }
+    toaster.create({
+      description: message,
+      type: success ? 'success' : 'error',
+      closable: true,
+      duration: 3000,
+    });
 
     return { success, message };
   };

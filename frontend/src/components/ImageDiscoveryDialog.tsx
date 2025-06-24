@@ -20,7 +20,7 @@ interface ImageDiscoveryDialogProps {
   onSelect: (url: string) => void;
 }
 
-export function ImageDiscoveryDialog({ onSelect }: ImageDiscoveryDialogProps) {
+function ImageDiscoveryDialog({ onSelect }: ImageDiscoveryDialogProps) {
   const [query, setQuery] = useState('');
   const [images, setImages] = useState<UnsplashImage[]>([]);
   const [isLoading, setIsloading] = useState(false);
@@ -101,9 +101,9 @@ export function ImageDiscoveryDialog({ onSelect }: ImageDiscoveryDialogProps) {
                   {images.map((image) => (
                     <Dialog.ActionTrigger
                       onClick={() => onSelect(image.urls.regular)}
+                      key={image.id}
                       asChild>
                       <Image
-                        key={image.id}
                         src={image.urls.regular}
                         alt={image.alt_description ?? image.description ?? ''}
                         w={'full'}
@@ -135,3 +135,5 @@ export function ImageDiscoveryDialog({ onSelect }: ImageDiscoveryDialogProps) {
     </Dialog.Root>
   );
 }
+
+export default ImageDiscoveryDialog;

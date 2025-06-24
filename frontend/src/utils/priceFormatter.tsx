@@ -5,6 +5,6 @@ export function formatPrice(value: number): string {
 }
 
 // Utility function: remove all non-digit characters
-export function unformatPrice(value: string): string {
-  return value.replace(/\D/g, '');
+export function unformatPrice(value: string): number {
+  return parseInt(value.replace(/\D/g, '')) || 0;
 }

@@ -11,7 +11,7 @@ function ProductEmpty() {
         color={'gray.500'}>
         No products found 😢{' '}
       </Text>
-      <Link to={'/create'}>
+      <Link to={'/product/add'}>
         <Text color={'blue.500'} _hover={{ textDecoration: 'underline' }}>
           Create a product
         </Text>
