@@ -64,6 +64,20 @@ function ProductForm({
     });
   };
 
+  const handlePriceInputFocus = () => {
+    setInputs((prev) => ({
+      ...prev,
+      price: `${unformatPrice(prev.price)}`,
+    }));
+  };
+
+  const handlePriceInputBlur = () => {
+    setInputs((prev) => ({
+      ...prev,
+      price: formatPrice(parseInt(prev.price)),
+    }));
+  };
+
   const handleImageSelect = (url: string) => {
     setInputs((prev) => ({ ...prev, image: url }));
   };
@@ -129,18 +143,8 @@ function ProductForm({
                 inputMode="numeric"
                 value={inputs.price}
                 onChange={handleFieldChange}
-                onFocus={() => {
-                  setInputs((prev) => ({
-                    ...prev,
-                    price: `${unformatPrice(prev.price)}`,
-                  }));
-                }}
-                onBlur={() => {
-                  setInputs((prev) => ({
-                    ...prev,
-                    price: formatPrice(parseInt(prev.price)),
-                  }));
-                }}
+                onFocus={handlePriceInputFocus}
+                onBlur={handlePriceInputBlur}
                 ref={priceInputRef}
               />
             </InputGroup>

@@ -9,55 +9,57 @@ import {
   CloseButton,
   Skeleton,
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useColorModeValue } from '@/components/ui/color-mode';
 import { toaster } from '@/components/ui/toaster';
 import { MdOutlineAddPhotoAlternate } from 'react-icons/md';
 import type { UnsplashImage } from '@/types/unsplash-api.types';
 import { discoverUnsplashImages } from '@/services/discoverUnsplashImages';
+import { useDebounce } from '@/hooks/useDebounce';
 
 interface ImageDiscoveryDialogProps {
   onSelect: (url: string) => void;
 }
 
 function ImageDiscoveryDialog({ onSelect }: ImageDiscoveryDialogProps) {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState<string>('');
+  const debouncedQuery = useDebounce(query);
   const [images, setImages] = useState<UnsplashImage[]>([]);
   const [isLoading, setIsloading] = useState(false);
   const bg = useColorModeValue('white', 'gray.900');
 
-  const handleSearchInputChange = async (
+  const handleSearchInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { value } = event.target;
     setQuery(value);
   };
 
+  const fetchImagesDiscovery = useCallback(async () => {
+    try {
+      setIsloading(true);
+      const { results } = await discoverUnsplashImages(debouncedQuery);
+      setImages(results);
+    } catch {
+      toaster.create({
+        description: 'Fail to search image',
+        type: 'error',
+        closable: true,
+        duration: 3000,
+      });
+    } finally {
+      setIsloading(false);
+    }
+  }, [debouncedQuery]);
+
   useEffect(() => {
-    if (!query.trim()) {
+    if (!debouncedQuery.trim()) {
       setImages([]);
       return;
     }
 
-    const timeout = setTimeout(async () => {
-      try {
-        setIsloading(true);
-        const { results } = await discoverUnsplashImages(query);
-        setImages(results);
-      } catch {
-        toaster.create({
-          description: 'Fail to search image',
-          type: 'error',
-          closable: true,
-          duration: 3000,
-        });
-      } finally {
-        setIsloading(false);
-      }
-    }, 500);
-
-    return () => clearTimeout(timeout);
-  }, [query]);
+    fetchImagesDiscovery();
+  }, [debouncedQuery, fetchImagesDiscovery]);
 
   return (
     <Dialog.Root>
