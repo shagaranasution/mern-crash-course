@@ -97,7 +97,7 @@ This project not only helped reinforce my understanding of TypeScript and React 
 ### Clone the Repo
 
 ```bash
-git clone https://github.com/your-username/mern-crash-course.git
+git clone https://github.com/shagaranasution/mern-crash-course
 cd mern-crash-course
 ```
 
